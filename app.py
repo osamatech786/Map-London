@@ -72,7 +72,6 @@ def load_places_from_airtable():
                 'Place': place,
                 'Location': (latitude, longitude),
                 'Info': info,  # Even if info is empty, it will still be added
-                'Is Complete': True,
                 'ID': rec['id']
             })
         else:
@@ -186,7 +185,6 @@ def update_data_page():
         # Flatten the Location column to separate Latitude and Longitude
         records_df[['Latitude', 'Longitude']] = pd.DataFrame(records_df['Location'].tolist(), index=records_df.index)
         records_df = records_df.drop(columns=["Location"], errors='ignore')
-        records_df = records_df.drop(columns=["Is Complete"], errors='ignore')
 
         # Rearrange the columns to have "Info" last
         records_df = records_df[['Place', 'Latitude', 'Longitude', 'Info', 'ID']]
