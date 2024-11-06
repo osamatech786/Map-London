@@ -112,8 +112,16 @@ def create_map(london_geojson, places):
     # Add markers for specific places
     for details in places:
         place = details['Place']
-        info = details['Info']  # Get the info field
-        pin_color = 'green' if info else 'gray'  # Change logic here
+        info = details['Info'].strip()  # Strip any leading or trailing spaces
+        # pin_color = 'green' if info else 'gray'  # Change logic here
+
+        # Determine the pin color based on Info
+        if info == "Already Engaging":
+            pin_color = 'green'
+        elif info == "In Progress":
+            pin_color = 'orange'
+        else:
+            pin_color = 'gray'
 
         folium.Marker(
             location=details["Location"],
@@ -169,8 +177,17 @@ def update_data_page():
                 return
 
     if st.session_state.authenticated:
-        st.write("### Editable Airtable Data")
-        
+        st.write("### Editable Map Data")
+
+        st.text("Please double click any cell to edit. Once you have updated multiple cells, click 'Update Table' button to apply changes.")
+        # Displaying the color coding instructions
+        st.markdown(""" 
+                    Map pins color mapping using "Info" column
+        - **Pin color : Green** -> "Already Engaging"
+        - **Pin color : Orange** -> "In Progress"
+        - **Pin color : Gray** -> anything else
+        """)
+
         # Fetch records from Airtable
         records = load_places_from_airtable()
 
